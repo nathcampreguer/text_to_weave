@@ -7,34 +7,30 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="index.css" media="screen" />
 
     <title>Text to Weave</title>
   </head>
   <body>
     <div class="container-fluid center">
-      <div class="container">
-        <div class="row">
-          <div class="col">
-          </div>
-          <div class="col">
-            <h1>Text to Weave</h1>
-
-            <form>
-              <label for="input_text">Enter your text here:</label>
-              <textarea id="input_text" name="input_text" rows="5" cols="60" maxlength="300"></textarea>
-              <div id="characters_remaining">300 characters left</div>
-            </form>
-          </div>
-          <div class="col">
-          </div>
+      <div class="row">
+        <div class="col">
         </div>
-        <div class="row">
-          <div class="col">
-            <canvas id="canvas"></canvas>
-          </div>
+        <div class="col">
+          <h1>Text to Weave</h1>
+
+          <form>
+            <label for="input_text">Enter your text here:</label>
+            <textarea id="input_text" name="input_text" rows="5" cols="60" maxlength="300"></textarea>
+            <div id="characters_remaining">300 characters left</div>
+          </form>
+          <a href="" id="download_link" download="weave_draft">Download Draft - PNG</a>
+        </div>
+        <div class="col">
         </div>
       </div>
     </div>
+    <canvas id="canvas"></canvas>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
