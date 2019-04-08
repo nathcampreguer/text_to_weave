@@ -52,20 +52,24 @@ function TextBasedWeavingDraft(char_pattern_weft_count, warp_count_per_char_stit
 
   this.encoded_text = function () {
     var text_lines = this.split_text_into_lines();
+    var first_utf_code_line = [];
     var utf_code_line = [];
+    var masked_utf_code_line = [];
     var row_nr = 0;
     var weaving_draft = [];
     var draft_line = [];
     var shifted_line = [];
 
     for (let line of text_lines) {
-      utf_code_line = chars_to_utf_code(line);
-      draft_line = this.build_draft_line(utf_code_line, row_nr);
+      first_utf_code_line = chars_to_utf_code(line);
+      masked_utf_code_line = mask_utf_codes(first_utf_code_line);
+      draft_line = this.build_draft_line(masked_utf_code_line, row_nr);
       weaving_draft.push(draft_line);
       row_nr++;
 
+      utf_code_line = first_utf_code_line;
       for (var i = 0; i < this.char_pattern_weft_count - 1; i++) {
-        shifted_line = line_binary_shift(utf_code_line);
+        shifted_line = line_binary_shift(utf_code_line, first_utf_code_line);
         draft_line = this.build_draft_line(shifted_line, row_nr);
         weaving_draft.push(draft_line);
         row_nr++;
@@ -77,6 +81,18 @@ function TextBasedWeavingDraft(char_pattern_weft_count, warp_count_per_char_stit
     add_selvage(weaving_draft, this.selvage_warp_count);
 
     return weaving_draft;
+  }
+
+  function mask_utf_codes(utf_codes) {
+    var masked_utf_codes = [];
+
+    for (let utf_code of utf_codes) {
+      //masking to get only final 5 bits 31=11111
+      //change to adapt to "char_nr_cols"
+      masked_utf_codes.push(utf_code & 31);
+    }
+
+    return masked_utf_codes;
   }
 
   function add_selvage(weaving_draft, warp_count) {
@@ -110,18 +126,30 @@ function TextBasedWeavingDraft(char_pattern_weft_count, warp_count_per_char_stit
     }
   }
 
-  function line_binary_shift(utf_codes) {
+  function line_binary_shift(utf_codes, letter_guide_utf_code_line) {
     var shifted_line = [];
     var shifted_char_code = 0;
     var masked_char_utf_code = 0;
+    var utf_code_to_string = "";
+    var letter_guide_count = 0;
 
     for (let char_utf_code of utf_codes) {
-      //circular shift
-      shifted_char_code = ((char_utf_code >>> 1) | (char_utf_code << 4));
+      utf_code_to_string = String.fromCharCode(letter_guide_utf_code_line[letter_guide_count]);
+      //masking code before the shift to avoid interferance from bits before the last 5
+      char_utf_code = char_utf_code & 31;
+      if (utf_code_to_string.match(/[A-Z]/)) {
+        //left circular shift
+        shifted_char_code = ((char_utf_code << 1) | (char_utf_code >>> 4));
+      }
+      else {
+        //right circular shift
+        shifted_char_code = ((char_utf_code >>> 1) | (char_utf_code << 4));
+      }
       //masking to get only final 5 bits 31=11111
       //change to adapt to "char_nr_cols"
       masked_char_utf_code = shifted_char_code & 31;
       shifted_line.push(masked_char_utf_code);
+      letter_guide_count++;
     }
 
     return shifted_line;
@@ -135,10 +163,7 @@ function TextBasedWeavingDraft(char_pattern_weft_count, warp_count_per_char_stit
 
     for (let character of line) {
       char_utf_code = character.charCodeAt(0);
-      //masking to get only final 5 bits 31=11111
-      //change to adapt to "char_nr_cols"
-      masked_char_utf_code = char_utf_code & 31;
-      utf_codes.push(masked_char_utf_code);
+      utf_codes.push(char_utf_code);
     }
 
     return utf_codes;
@@ -212,6 +237,5 @@ function TextBasedWeavingDraft(char_pattern_weft_count, warp_count_per_char_stit
       return ["1","0"];
     }
   }
-
 
 }
