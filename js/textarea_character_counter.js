@@ -9,7 +9,7 @@
     count_remaining = document.getElementById('characters_remaining');
 
     text_entered = this.value;
-    counter = (300 - (text_entered.length));
+    counter = (304 - (text_entered.length));
     count_remaining.textContent = counter;
   }
 
