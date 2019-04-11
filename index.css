@@ -2,3 +2,7 @@ canvas {
   width: 1320px;
   display: block;
 }
+
+.add-margin {
+  margin-bottom: 30px;
+}

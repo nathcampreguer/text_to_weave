@@ -75,7 +75,7 @@ function TextBasedWeavingDraft(char_pattern_weft_count, warp_count_per_char_stit
         row_nr++;
         utf_code_line = shifted_line;
       }
-      weaving_draft = weaving_draft.concat(this.new_line());
+      // weaving_draft = weaving_draft.concat(this.new_line());
     }
 
     add_selvage(weaving_draft, this.selvage_warp_count);
@@ -136,18 +136,20 @@ function TextBasedWeavingDraft(char_pattern_weft_count, warp_count_per_char_stit
     for (let char_utf_code of utf_codes) {
       utf_code_to_string = String.fromCharCode(letter_guide_utf_code_line[letter_guide_count]);
       //masking code before the shift to avoid interferance from bits before the last 5
-      char_utf_code = char_utf_code & 31;
+      // char_utf_code = char_utf_code & 31;
+      masked_char_utf_code = shifted_char_code & 32767;
       if (utf_code_to_string.match(/[A-Z]/)) {
         //left circular shift
-        shifted_char_code = ((char_utf_code << 1) | (char_utf_code >>> 4));
+        shifted_char_code = ((char_utf_code << 1) | (char_utf_code >>> 14));
       }
       else {
         //right circular shift
-        shifted_char_code = ((char_utf_code >>> 1) | (char_utf_code << 4));
+        shifted_char_code = ((char_utf_code >>> 1) | (char_utf_code << 14));
       }
       //masking to get only final 5 bits 31=11111
       //change to adapt to "char_nr_cols"
-      masked_char_utf_code = shifted_char_code & 31;
+      // masked_char_utf_code = shifted_char_code & 31;
+      masked_char_utf_code = shifted_char_code & 32767;
       shifted_line.push(masked_char_utf_code);
       letter_guide_count++;
     }

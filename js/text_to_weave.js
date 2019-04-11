@@ -11,7 +11,7 @@
 
   function encode_text() {
     var text = this.value;
-    var weaving_draft = new TextBasedWeavingDraft(10,3,5,10,15,2,3,76,text);
+    var weaving_draft = new TextBasedWeavingDraft(10,1,15,10,15,2,3,76,text);
     var draft = weaving_draft.encoded_text();
     var row = 0;
 
@@ -37,7 +37,7 @@
       if (+stitch) {
         context.fillStyle = 'black';
       } else {
-        context.fillStyle = 'gray';
+        context.fillStyle = 'white';
       }
       context.fillRect(col, row, 1, 1);
       col++;
