@@ -11,7 +11,7 @@
 
   function encode_text() {
     var text = this.value;
-    var weaving_draft = new TextBasedWeavingDraft(10,1,15,10,15,2,3,76,text);
+    var weaving_draft = new TextBasedWeavingDraft(15,3,5,15,15,2,0,76,text);
     var draft = weaving_draft.encoded_text();
     var row = 0;
 
